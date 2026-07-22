@@ -83,7 +83,7 @@ flowchart LR
 
 ## 4. Overall Optimization Workflow
 
-The pipeline is orchestrated by a single entry point, [`main_organized.m`](main_organized.m), and proceeds through five conceptual stages:
+The pipeline is orchestrated by a single entry point, [`main.m`](main.m), and proceeds through five conceptual stages:
 
 ```mermaid
 flowchart TD
@@ -120,7 +120,7 @@ The codebase is layered by **responsibility** and by **increasing dynamical fide
 
 ```mermaid
 flowchart TD
-    MAIN["main_organized.m<br/><i>entry point / orchestration</i>"]
+    MAIN["main.m<br/><i>entry point / orchestration</i>"]
 
     subgraph L_ORCH["Orchestration layer — Opt Manager/"]
         CR["cr3bp_search"]
@@ -174,13 +174,13 @@ The **core utilities** (`Auxiliar/`) implement the shared physics — dynamics, 
 | **`Full_ephemeris_conversion/`** | Refinement (step 2) | Second fidelity upgrade: **full ephemeris with explicit Moon gravity**. Adds trajectory-correction manoeuvres (TCMs) before/after the flyby, B-plane targeting, and pre/post/global-flyby refinement sub-problems. |
 | **`kernels/`** | Data | SPICE/NAIF kernels (planetary ephemerides, leap seconds, frames) loaded through the meta-kernel `sckernel.tm`. |
 | **`Results/`** | Output | One sub-folder per run (`<CometName>_runX`) holding the saved search parameters, solutions, Pareto data, and figures. |
-| *(root)* | Entry / data | `main_organized.m` (entry point), `startup.m` (MICE path setup), precomputed halo data (`S_halo.mat`, `unstable_dir.mat`), cache files, and standalone helper scripts. |
+| *(root)* | Entry / data | `main.m` (entry point), `startup.m` (MICE path setup), precomputed halo data (`S_halo.mat`, `unstable_dir.mat`), cache files, and standalone helper scripts. |
 
 **Root-level files worth knowing:**
 
 | File | Purpose |
 |---|---|
-| [`main_organized.m`](main_organized.m) | **The entry point.** Configures the run, launches the search, extracts the Pareto front, refines a solution, and plots. |
+| [`main.m`](main.m) | **The entry point.** Configures the run, launches the search, extracts the Pareto front, refines a solution, and plots. |
 | [`startup.m`](startup.m) | Adds the local **MICE** (MATLAB SPICE) toolkit to the path. **Must be edited to point at your MICE install.** |
 | `S_halo.mat`, `unstable_dir.mat` | Precomputed halo-orbit states and unstable eigenvectors (inputs to the manifold generation). |
 | `halo_tree.mat`, `halo_manifold.mat`, `manifold_db.mat`, `moontraj_db.mat` | Cached manifold / KD-tree databases (regenerated on demand). |
@@ -302,10 +302,10 @@ flowchart LR
 
 | Object | Produced by | Consumed by | Contents |
 |---|---|---|---|
-| `search_params` | `main_organized` | `cr3bp_search` | All sweep bounds, filter thresholds, spacing limits, manifold resolution |
+| `search_params` | `main` | `cr3bp_search` | All sweep bounds, filter thresholds, spacing limits, manifold resolution |
 | `global_results` | `cr3bp_search` | `compute_pareto_front` | One struct per converged transfer: optimal variables (`x_opt`, `result_fmincon`), matched manifold data, ToF, ΔV components |
-| `pareto_data` / `pareto_front` | `compute_pareto_front` | `main_organized`, `run_refinement` | Front indices, ΔV/ToF vectors, and the full solution structs, sorted by ToF |
-| `refine_params` | `main_organized` | `run_refinement` | Budget, min flyby altitude, node counts per phase, method flags |
+| `pareto_data` / `pareto_front` | `compute_pareto_front` | `main`, `run_refinement` | Front indices, ΔV/ToF vectors, and the full solution structs, sorted by ToF |
+| `refine_params` | `main` | `run_refinement` | Budget, min flyby altitude, node counts per phase, method flags |
 | `out` (`out_cr3bp` / refined) | `variables_organizer[_refined]` | plots, `check_altitude`, exports | Canonical trajectory: `departure`, `injection`, `dsm1`, `tcm1`, `flyby`, `tcm2`, `dsm2`, `comet` — each with states (synodic + J2000), epochs, and ΔV |
 
 The **`out` struct is the central data structure** of the refinement layers: every arc, epoch, and manoeuvre is stored in both synodic (non-dimensional) and J2000 (dimensional) form, so any downstream tool (plotting, altitude checks, Python/Blender export) reads a single, consistent object.
@@ -356,17 +356,17 @@ Standalone tools, run manually against a saved result set: `verify_flyby_geometr
 
 ## 10. Execution Flow
 
-Running [`main_organized.m`](main_organized.m) executes the following sequence:
+Running [`main.m`](main.m) executes the following sequence:
 
 ```mermaid
 sequenceDiagram
     participant U as User
-    participant M as main_organized
+    participant M as main
     participant S as cr3bp_search
     participant P as compute_pareto_front
     participant R as run_refinement
 
-    U->>M: run main_organized.m
+    U->>M: run main.m
     M->>M: set constants, load kernels & halo data
     M->>M: create Results/<comet>_runX folder
     M->>S: cr3bp_search(c, comet, S_halo, unstable_dir, search_params)
@@ -384,7 +384,7 @@ sequenceDiagram
     M->>M: plot_full_trajectory(selected solution)
 ```
 
-**In practice, the run is driven by a handful of switches near the top of `main_organized.m`:** the target comet, the sweep vectors (`vinf_ub_vec`, `q_vec`, `maximum_dv_vec`), the manifold resolution and matching thresholds, the refinement budget/altitude, and the refinement method (fast vs. global). A typical workflow is to run once with a coarse sweep, inspect the printed Pareto table, then set `selected_rank` and re-run to refine a chosen solution.
+**In practice, the run is driven by a handful of switches near the top of `main.m`:** the target comet, the sweep vectors (`vinf_ub_vec`, `q_vec`, `maximum_dv_vec`), the manifold resolution and matching thresholds, the refinement budget/altitude, and the refinement method (fast vs. global). A typical workflow is to run once with a coarse sweep, inspect the printed Pareto table, then set `selected_rank` and re-run to refine a chosen solution.
 
 ---
 
@@ -415,7 +415,7 @@ The architecture embodies a few deliberate engineering choices:
 Suggested reading order for a new engineer:
 
 1. **This README** — the mental model.
-2. **[`main_organized.m`](main_organized.m)** — the executable table of contents; every stage is called here in order, with the user-configurable parameters at the top.
+2. **[`main.m`](main.m)** — the executable table of contents; every stage is called here in order, with the user-configurable parameters at the top.
 3. **`Opt Manager/cr3bp_search.m`** — how Stages 0–2 are wired together and swept.
 4. **`Moon2Comet/optimization_moon2comet.m`** — the M2C phase (Stage 1).
 5. **`Halo2Moon/`** (`build_moon_manifold_db` → `find_manifold_matches` → `refinement_halo2moon`) — the H2M phase (Stage 2).
@@ -443,9 +443,9 @@ Every `.m` file begins with a header documenting its purpose, inputs, and output
 ### Setup
 
 1. **Install MICE** and edit [`startup.m`](startup.m) so its `addpath` lines point at your local `mice/lib` and `mice/src/mice`.
-2. Ensure the `kernels/` folder is present; `main_organized.m` loads it with `cspice_furnsh({'kernels/sckernel.tm'})`.
-3. Open `main_organized.m`, select the target comet (`selected_comet`) and adjust the sweep / refinement parameters in the *User-configurable parameters* block.
-4. Run `main_organized.m`.
+2. Ensure the `kernels/` folder is present; `main.m` loads it with `cspice_furnsh({'kernels/sckernel.tm'})`.
+3. Open `main.m`, select the target comet (`selected_comet`) and adjust the sweep / refinement parameters in the *User-configurable parameters* block.
+4. Run `main.m`.
 
 > On the first run the manifold database and KD-tree are built and cached; subsequent runs reuse them. The search is computationally heavy — start with a coarse sweep.
 
