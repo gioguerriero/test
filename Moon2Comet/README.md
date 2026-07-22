@@ -110,7 +110,15 @@ The M2C objective realises the **ΔV–time-of-flight trade-off** through the sc
 | **2 (fmincon)** | `objective_function_moon2comet_fmincon` = `‖ΔV_DSM2‖·Vstar + q·tof` | DSM2 delta-v (dimensional) plus a time penalty. |
 | **3 (fixed-TOF)** | `objective_function_moon2comet_tof` = `‖ΔV_DSM2‖·Vstar` | DSM2 delta-v only (TOF is now a constant). |
 
-In all cases the **propellant term** is the magnitude of the DSM2 impulse — the only free manoeuvre on the M2C leg (the flyby is ballistic) — and the **time term** biases the solution toward faster transfers as `q` grows. Increasing `q` traces the front from the minimum-ΔV end toward the minimum-time end.
+In all cases the **propellant term** is the magnitude of the DSM2 impulse — the only free manoeuvre on the M2C leg (the flyby is ballistic).
+
+> **Discrepancy with `main.m` and the report.** Both `main.m` and the accompanying report describe the M2C cost as the *convex combination* `(1-q)·ΔV + q·ToF`. That is **not** what Stages 1 and 2 actually implement above: the code uses `ΔV + q·ToF`, with **no `(1-q)` factor on the delta-v term**.
+>
+> This is not a cosmetic difference — the two formulas trace the Pareto front differently as `q` is swept:
+> - **As implemented (`ΔV + q·ToF`):** the delta-v term is **never discounted**; increasing `q` only adds more weight to the time-of-flight term on top of the full ΔV. Decreasing `q` toward 0 recovers a pure minimum-ΔV objective.
+> - **As described in `main.m`/the report (`(1-q)·ΔV + q·ToF`):** at `q → 1` the delta-v term is driven to **zero weight**, so the optimiser would pursue a pure minimum-ToF solution regardless of propellant cost.
+>
+> With the formula actually implemented, empirical testing showed that **no feasible solutions were found for `q` above roughly 0.8** — because the ΔV term is never discounted away, past that point the added ToF penalty is not enough to pull the solver toward a feasible faster (and necessarily more expensive) trajectory within the mission's ΔV/spacing constraints.
 
 ---
 
