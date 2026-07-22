@@ -1,4 +1,4 @@
-# Lunar-Flyby Earth-Escape Trajectory Optimization Framework
+# ESA Comet Interceptor — Trajectory Design and Optimization Framework
 
 **Trajectory design and optimization for the ESA Comet Interceptor mission, exploiting a lunar gravity assist to boost Earth escape from a Sun–Earth L2 halo orbit.**
 
