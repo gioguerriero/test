@@ -15,13 +15,14 @@ This repository contains the MATLAB implementation of the *lunar-flyby* departur
 5. [High-Level Architecture](#5-high-level-architecture)
 6. [Directory Organization](#6-directory-organization)
 7. [Detailed Description of Each Stage](#7-detailed-description-of-each-stage)
-8. [Data Flow Between Stages](#8-data-flow-between-stages)
-9. [Main Modules and Responsibilities](#9-main-modules-and-responsibilities)
-10. [Execution Flow](#10-execution-flow)
-11. [Design Philosophy](#11-design-philosophy)
-12. [How to Navigate the Repository](#12-how-to-navigate-the-repository)
-13. [Getting Started](#13-getting-started)
-14. [Outputs](#14-outputs)
+8. [Full-Ephemeris Refinement Bridge (GODOT)](#8-full-ephemeris-refinement-bridge-godot)
+9. [Data Flow Between Stages](#9-data-flow-between-stages)
+10. [Main Modules and Responsibilities](#10-main-modules-and-responsibilities)
+11. [Execution Flow](#11-execution-flow)
+12. [Design Philosophy](#12-design-philosophy)
+13. [How to Navigate the Repository](#13-how-to-navigate-the-repository)
+14. [Getting Started](#14-getting-started)
+15. [Outputs](#15-outputs)
 
 ---
 
@@ -171,6 +172,7 @@ The **core utilities** (`Auxiliar/`) implement the shared physics — dynamics, 
 | **`Opt Manager/`** | Orchestration | Top-level drivers: `cr3bp_search` (the full nested CR3BP search), `compute_pareto_front` (front extraction), `run_refinement` (ephemeris refinement driver), and the final trajectory plot. |
 | **`CR3BP 2 Ephemeris Sun-Earth/`** | Refinement (step 1) | First fidelity upgrade: converts a CR3BP solution into a **real-ephemeris Sun+Earth** model via **multiple shooting** (Moon still zero-SOI). Includes the direct-optimization constraints, initial-guess builder, result organiser, and diagnostics. |
 | **`Full_ephemeris_conversion/`** | Refinement (step 2) | Second fidelity upgrade: **full ephemeris with explicit Moon gravity**. Adds trajectory-correction manoeuvres (TCMs) before/after the flyby, B-plane targeting, and pre/post/global-flyby refinement sub-problems. |
+| **`GODOT Refinement/`** | External refinement | Python code (ESA **GODOT** library) for the full-ephemeris refinement, fed by the text file exported from MATLAB. **Work in progress** — see [§8](#8-full-ephemeris-refinement-bridge-godot) and the folder's README. |
 | **`kernels/`** | Data | SPICE/NAIF kernels (planetary ephemerides, leap seconds, frames) loaded through the meta-kernel `sckernel.tm`. |
 | **`Results/`** | Output | One sub-folder per run (`<CometName>_runX`) holding the saved search parameters, solutions, Pareto data, and figures. |
 | *(root)* | Entry / data | `main.m` (entry point), `startup.m` (MICE path setup), precomputed halo data (`S_halo.mat`, `unstable_dir.mat`), cache files, and standalone helper scripts. |
@@ -266,6 +268,10 @@ All converged solutions are collected into `global_results`, then `compute_paret
 
 - **Code:** `CR3BP 2 Ephemeris Sun-Earth/` — `build_initial_guess_MS`, `optimization_ephe`, `nonlinear_constraints_ephe_multiple`, `variables_organizer`, `check_altitude`.
 
+> **Tuning the number of nodes (important).** The number of multiple-shooting nodes on each leg strongly affects the refinement: too few and the discretised trajectory cannot follow the true dynamics (the optimisation drifts away from the CR3BP solution), too many and the optimisation becomes prohibitively slow. The node count is not set directly but through the variable **`days_per_node`** in [`main.m`](main.m) — roughly one node every *N* days, per phase — from which `k_vec` (the number of nodes per leg) is derived for each solution.
+>
+> **Recommended workflow:** pick a value of `days_per_node`, look at the initial-guess plot, and check how closely the multiple-shooting reconstruction overlaps the original CR3BP trajectory. If it diverges noticeably, **decrease `days_per_node`** (more nodes); if it already matches well, **do not add nodes needlessly** — an over-dense discretisation can make the optimisation take forever. To inspect the guess *before* committing to the (expensive) refinement, place a breakpoint / temporary debug stop at the plotting call around **line 252 of [`run_refinement.m`](Opt%20Manager/run_refinement.m)**: it shows the node layout and the reconstructed trajectory, so you can validate the discretisation — and abort the run — before the optimiser starts.
+
 **Step 4b — Full ephemeris with Moon gravity (TCMs).** The Moon's gravity is now **explicitly integrated**. To absorb the perturbation, two **trajectory-correction manoeuvres (TCMs)** are added a few days before and after the flyby, and the flyby is targeted through its **B-plane**. The refinement is split into pre-flyby and post-flyby sub-problems.
 
 - **Code:** `Full_ephemeris_conversion/` — `bplane_from_vinf`, `bplane_tcm`, the `Refinement pre flyby/`, `Refinement post flyby/`, `Refinement global post flyby/` sub-problems, and `variables_organizer_refined`.
@@ -280,7 +286,26 @@ All converged solutions are collected into `global_results`, then `compute_paret
 
 ---
 
-## 8. Data Flow Between Stages
+## 8. Full-Ephemeris Refinement Bridge (GODOT)
+
+Beyond the internal refinement of Stage 4, the framework is designed to **hand off a trajectory to an external, higher-fidelity refinement** written in Python on top of **ESA's GODOT** library. That external code lives in the [`GODOT Refinement/`](GODOT%20Refinement/) folder, and the interface between the two worlds is a **plain-text export file** produced on the MATLAB side.
+
+### The export function
+
+The bridge is implemented by [`write_python_inputs`](Auxiliar/write_python_inputs.m) (and its variant `write_python_inputs_serot`) in [`Auxiliar/`](Auxiliar/), called by `run_refinement` once a CR3BP/ephemeris solution has been assembled.
+
+- **What it produces.** A `.txt` file containing everything the downstream tool needs to reconstruct the trajectory: the key mission states (post-injection, pre-injection, post-DSM1, flyby periapsis, post-DSM2), the segment durations, and the comet encounter date.
+- **Frames.** `write_python_inputs` writes the states in the **non-dimensional CR3BP synodic** frame; `write_python_inputs_serot` writes the *same* information in the **dimensional, Earth-centred SEROT** (Sun–Earth rotating) frame, i.e. positions in km and velocities in km/s — the form convenient for the ephemeris-based Python side.
+
+### Why it exists
+
+The MATLAB pipeline produces a self-consistent trajectory but stops at the fidelity level described in Stage 4. The `.txt` file exists to **link this MATLAB optimisation process to the full-ephemeris refinement process in Python/GODOT**: the MATLAB side exports the converged trajectory, and the Python side re-imports it as the initial guess for a high-fidelity, real-ephemeris refinement. This decouples the two environments — the search/optimisation stays in MATLAB, the final high-fidelity propagation can be delegated to GODOT — communicating through a single, human-readable interface file.
+
+> The Python/GODOT code in [`GODOT Refinement/`](GODOT%20Refinement/) is a **work in progress** (see that folder's README). The export functions on the MATLAB side are complete and produce the interface file regardless.
+
+---
+
+## 9. Data Flow Between Stages
 
 The pipeline is best understood as a series of transformations on a few well-defined data objects:
 
@@ -311,7 +336,7 @@ The **`out` struct is the central data structure** of the refinement layers: eve
 
 ---
 
-## 9. Main Modules and Responsibilities
+## 10. Main Modules and Responsibilities
 
 ### `Auxiliar/` — core physics & utilities
 
@@ -325,7 +350,7 @@ The **`out` struct is the central data structure** of the refinement layers: eve
 | `lambert.m` | Robust Lambert solver (used for the DSM2 heliocentric leg). |
 | `astroConstants` / `getAstroConstants` | Standard astrodynamic constants. |
 | `plot_comets_synodic`, `plot_trajectory_heliocentric`, `plot_paper_trajectory` | Visualisation of comets, trajectories, and publication figures. |
-| `write_python_inputs[_serot]` | Export a trajectory to text for external (Python/Blender) tooling. |
+| `write_python_inputs[_serot]` | Export a trajectory to a text file — the interface toward the external Python/GODOT full-ephemeris refinement (see [§8](#8-full-ephemeris-refinement-bridge-godot)). |
 
 ### `Moon2Comet/` — M2C optimizer
 
@@ -353,7 +378,7 @@ Standalone tools, run manually against a saved result set: `verify_flyby_geometr
 
 ---
 
-## 10. Execution Flow
+## 11. Execution Flow
 
 Running [`main.m`](main.m) executes the following sequence:
 
@@ -383,11 +408,11 @@ sequenceDiagram
     M->>M: plot_full_trajectory(selected solution)
 ```
 
-**In practice, the run is driven by a handful of switches near the top of `main.m`:** the target comet, the sweep vectors (`vinf_ub_vec`, `q_vec`, `maximum_dv_vec`), the manifold resolution and matching thresholds, the refinement budget/altitude, and the refinement method (fast vs. global). A typical workflow is to run once with a coarse sweep, inspect the printed Pareto table, then set `selected_rank` and re-run to refine a chosen solution.
+**In practice, the run is driven by a handful of switches near the top of `main.m`:** the target comet, the sweep vectors (`vinf_ub_vec`, `q_vec`, `maximum_dv_vec`), the manifold resolution and matching thresholds, the refinement budget/altitude, and the refinement method (fast vs. global). A typical workflow is to run once with a coarse sweep and inspect the printed Pareto table; the refinement loop then refines the front solutions — all of them by default, or a specific one by editing the loop bound (`for ii = ...`) — and the index `k` selects which refined trajectory to plot.
 
 ---
 
-## 11. Design Philosophy
+## 12. Design Philosophy
 
 The architecture embodies a few deliberate engineering choices:
 
@@ -409,9 +434,9 @@ The architecture embodies a few deliberate engineering choices:
 
 ---
 
-## 12. How to Navigate the Repository
+## 13. How to Navigate the Repository
 
-Suggested reading order for a new engineer:
+Suggested reading order for a new user:
 
 1. **This README** — the mental model.
 2. **[`main.m`](main.m)** — the executable table of contents; every stage is called here in order, with the user-configurable parameters at the top.
@@ -426,7 +451,7 @@ Every `.m` file begins with a header documenting its purpose, inputs, and output
 
 ---
 
-## 13. Getting Started
+## 14. Getting Started
 
 ### Requirements
 
@@ -436,21 +461,22 @@ Every `.m` file begins with a header documenting its purpose, inputs, and output
 | **Optimization Toolbox** | `fmincon`, `ga`. |
 | **Parallel Computing Toolbox** | `parpool` / `UseParallel` (speeds up the GA and matching; optional). |
 | **Statistics Toolbox** | `KDTreeSearcher`, and `ksdensity` for some diagnostic plots (optional). |
-| **MICE (SPICE for MATLAB)** | NAIF SPICE toolkit; ephemerides and time conversions. |
+| **MICE (SPICE for MATLAB)** | NAIF SPICE toolkit; ephemerides and time conversions. Download: <https://naif.jpl.nasa.gov/naif/toolkit_MATLAB.html> |
 | **SPICE kernels** | Provided in `kernels/` and loaded via the meta-kernel `sckernel.tm`. |
 
 ### Setup
 
-1. **Install MICE** and edit [`startup.m`](startup.m) so its `addpath` lines point at your local `mice/lib` and `mice/src/mice`.
-2. Ensure the `kernels/` folder is present; `main.m` loads it with `cspice_furnsh({'kernels/sckernel.tm'})`.
-3. Open `main.m`, select the target comet (`selected_comet`) and adjust the sweep / refinement parameters in the *User-configurable parameters* block.
-4. Run `main.m`.
+1. **Install MICE.** Download the MATLAB MICE toolkit from the official NAIF page — <https://naif.jpl.nasa.gov/naif/toolkit_MATLAB.html> — and unpack it locally.
+2. **Configure the MICE path.** Edit [`startup.m`](startup.m) so its `addpath` lines point at the **absolute path of your own local MICE installation** (`.../mice/lib` and `.../mice/src/mice`). The placeholder paths in `startup.m` **must** be replaced with your machine's actual install location, or every `cspice_*` call will fail.
+3. Ensure the `kernels/` folder is present; `main.m` loads it with `cspice_furnsh({'kernels/sckernel.tm'})`.
+4. Open `main.m`, select the target comet (`selected_comet`) and adjust the sweep / refinement parameters in the *User-configurable parameters* block.
+5. Run `main.m`.
 
 > On the first run the manifold database and KD-tree are built and cached; subsequent runs reuse them. The search is computationally heavy — start with a coarse sweep.
 
 ---
 
-## 14. Outputs
+## 15. Outputs
 
 Each run creates a dedicated folder `Results/<CometName>_runX/` (the run number auto-increments) containing:
 
