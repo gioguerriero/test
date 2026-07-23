@@ -489,6 +489,11 @@ Each run creates a dedicated folder `Results/<CometName>_runX/` (the run number 
 | `refine_params.mat` | The refinement configuration. |
 | `refined_front.mat` | The ephemeris-refined front solutions. |
 | `pareto_front.fig` | The ΔV–ToF Pareto-front figure. |
+| `out_cr3bp.mat` | The organized CR3BP solution handed to the ephemeris refinement (`variables_organizer` output), written by `run_refinement`. |
+| `python_inputs.txt` | The trajectory exported for the Python/GODOT refinement, in the **synodic non-dimensional CR3BP** frame (see [§8](#8-full-ephemeris-refinement-bridge-godot)). |
+| `python_inputs_serot.txt` | The same export in the **Sun–Earth rotating (SEROT)** frame. |
+
+> **Note.** `out_cr3bp.mat`, `python_inputs.txt` and `python_inputs_serot.txt` are produced inside the `run_refinement` loop and **overwritten on each refined solution**, so they always reflect the last solution refined in the run. They now land in the run folder rather than the project root. The optional `blender_input.json` visualization export is disabled.
 
 Additionally, the run prints a ranked Pareto table to the console and generates trajectory plots (synodic and heliocentric views, CR3BP-vs-refined front comparison). The energy-level validation (`vinf_escape_study`) and geometric checks are run separately, on a saved result set, from `Auxiliar/Checks and tests/`.
 
