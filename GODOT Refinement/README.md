@@ -69,14 +69,25 @@ The optimisation engine throughout is **IPOPT** (via **PyGMO**), driven with **e
 | `traj_R2_preopt.yml` | **Output** — transfer trajectory *before* the second optimisation (the initial guess), written by `main.py`. |
 | `traj_R2.yml` | **Output** — transfer trajectory *after* the full-ephemeris optimisation. |
 | `pre_opt.mat`, `traiettoria_cr3bp.mat` | Supporting MATLAB data (CR3BP trajectory / pre-optimisation state) kept alongside the Python code for reference. |
-| `envgodot/` | The **Python environment folder** for GODOT (its contents are not documented here). |
 | `__pycache__/` | Python's compiled-bytecode cache (auto-generated; not documented here). |
 
 ---
 
+## Installing GODOT
+
+The GODOT library is **not** shipped with this repository — you must download and install it yourself. It is distributed by ESA, together with its installation instructions and documentation, at:
+
+- **https://godot.io.esa.int/docs/**
+
+Follow ESA's instructions there to set up GODOT (typically inside a dedicated conda environment) together with **PyGMO/IPOPT**. The `main.py` driver assumes the environment is activated with `conda activate godot`.
+
+## A short home-made guide to GODOT
+
+Alongside this code I have also included a **short guide I wrote myself** to help understand and use GODOT. It is meant as a practical, hands-on companion to the official ESA documentation — a quicker way to get oriented with the concepts and workflow used by the scripts in this folder (universes, timelines, control points, manoeuvres, matches, and the optimisation set-up). New users are encouraged to read it before diving into `main.py`.
+
 ## Running it
 
-The code expects a working **GODOT** installation together with **PyGMO/IPOPT** (typically inside a dedicated conda environment; `main.py` assumes `conda activate godot`). With `python_inputs.txt` present in this folder, the intended entry point is:
+Once GODOT is installed and `python_inputs.txt` is present in this folder, the intended entry point is:
 
 ```bash
 conda activate godot
