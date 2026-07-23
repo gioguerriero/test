@@ -1,0 +1,90 @@
+version: '3.0'    
+
+# Spacetime configuration
+spacetime: 
+  system: BCRS    # Barycentric Celestial Reference System , standard for
+                  # solar system dynamics    
+
+ephemeris:
+  - name: de432                     # Name of the ephemeris, used for reference in this universe object
+    files:                          # Paths of ephemeris files to load. Some file type combinations can be loaded together...
+      - /home/master25/mae26/g.guerriero/Documents/GODOT_code/Ephemeris Moon trajectory new commented/Universe/de432s.bsp
+    cache: True                     # (optional, default True) Whether to cache kernels to memory
+  - name: gm431                     # ...otherwise files of different types are loaded in separate blocks
+    files:
+      - /home/master25/mae26/g.guerriero/Documents/GODOT_code/Ephemeris Moon trajectory new commented/Universe/gm_de431.tpc
+
+frames:
+
+  - name: ephem1          # Name of the model
+    type: Ephem           # Type of the model
+    config:               # Configuration of the Ephem model
+      source: de432       # Ephemerides source
+
+  - name: SEROT
+    type: AxesLocalOrbital
+    config:
+      center: Sun
+      target: Earth
+      axes: Pos
+
+  - name: EMROT
+    type: AxesLocalOrbital
+    config:
+      center: Earth
+      target: Moon
+      axes: Pos
+
+  - name: SunICRF
+    type: AxesOrient
+    config:
+      model: EMCJ2000
+
+constants: # MA NON SONO GIA' DEFINITE NEL KERNEL -> si con source, ma li sovrascrivo dopo -> preferisco non sovrasciverli
+  ephemeris:
+    - source: gm431
+  data :
+    # EarthGM: 398600.4418 quello vecchio
+    # EarthGM: 398702.4418
+    # SunGM: 132712440018 quello vecchio
+    # SunGM: 132758540018
+    # MoonGM: 4902.7779
+    EarthSOI: 3000000 
+
+bodies:
+  - name: Earth
+    point: Earth
+  - name: Sun
+    point: Sun
+  - name: Moon
+    point: Moon
+
+gravity:
+  - name: gravEMS
+    bodies:
+    - Sun
+    - Earth
+    - Moon
+  - name: gravES
+    bodies: 
+    - Sun
+    - Earth
+
+dynamics:
+  - name: EMS_gravity
+    type: SystemGravity
+    config:
+      model: gravEMS
+  - name: ES_gravity
+    type : SystemGravity
+    config:
+      model: gravES
+
+
+spacecraft:
+  - name: SC
+    mass: 1 kg
+    thrusters:
+      - name: main
+        thrust: 1 N
+        isp : 1 s

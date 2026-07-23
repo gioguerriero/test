@@ -1,0 +1,1431 @@
+settings:
+  relTol: 1e-12
+  steps: 10000000
+setup:
+  - name: SC
+    type: group
+    spacecraft: SC
+    input:
+      - name: center
+        type: point
+      - name: dv
+        type: scalar
+        unit: m/s
+timeline:
+  - type: control
+    epoch: 11717.545185257395 TDB
+    name: ctr0a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 1525087.4350422395 km
+          pos_y: -580770.19464607886 km
+          pos_z: 511271.64227197587 km
+          vel_x: -0.10131858826675637 km/s
+          vel_y: -0.23752184422674302 km/s
+          vel_z: -0.12627161335933071 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: manoeuvre
+    name: man_injection
+    model: impulsive
+    input: SC
+    thruster: main
+    config:
+      point:
+        reference: ctr0a
+        dt: 0 s
+      direction:
+        axes: SEROT
+        dv_x: -0.001400576847741114 km/s
+        dv_y: 0.00087573310322131004 km/s
+        dv_z: -0.0099487127006521736 km/s
+  - type: match
+    name: match_ctr0a
+    input: SC
+    left:
+      reference: ctr0a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr1a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11727.736375798848 TDB
+    name: ctr1a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 1416293.4716356834 km
+          pos_y: -753124.04555921443 km
+          pos_z: 355890.02047133655 km
+          vel_x: -0.12206419452860912 km/s
+          vel_y: -0.14510730580431214 km/s
+          vel_z: -0.18347227200497576 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match1a
+    input: SC
+    left:
+      reference: ctr1a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr2a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11737.927566339937 TDB
+    name: ctr2a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 1307391.3290790231 km
+          pos_y: -832519.11654578161 km
+          pos_z: 178765.74298195713 km
+          vel_x: -0.1220056464716297 km/s
+          vel_y: -0.032291141657339928 km/s
+          vel_z: -0.21589149768813345 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match2a
+    input: SC
+    left:
+      reference: ctr2a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr3a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11748.118756880582 TDB
+    name: ctr3a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 1206757.4599030023 km
+          pos_y: -806067.19824129669 km
+          pos_z: -17966.21243007329 km
+          vel_x: -0.10399002245505637 km/s
+          vel_y: 0.093863703789747066 km/s
+          vel_z: -0.22667485419612413 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match3a
+    input: SC
+    left:
+      reference: ctr3a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr4a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11758.309947420723 TDB
+    name: ctr4a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 1127533.8494322707 km
+          pos_y: -666103.01847561449 km
+          pos_z: -211423.09459729766 km
+          vel_x: -0.07502266016392091 km/s
+          vel_y: 0.22366380650082485 km/s
+          vel_z: -0.20673282363994144 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match4a
+    input: SC
+    left:
+      reference: ctr4a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr5a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11768.501137960311 TDB
+    name: ctr5a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 1074121.7189823815 km
+          pos_y: -415776.17828810046 km
+          pos_z: -369633.82279153774 km
+          vel_x: -0.047933132929177454 km/s
+          vel_y: 0.34049595267095234 km/s
+          vel_z: -0.14470412220712564 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match5a
+    input: SC
+    left:
+      reference: ctr5a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr6a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11778.692328499319 TDB
+    name: ctr6a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 1038527.7787299799 km
+          pos_y: -80159.538218298025 km
+          pos_z: -452610.26430872153 km
+          vel_x: -0.035860252874814383 km/s
+          vel_y: 0.41047401875341538 km/s
+          vel_z: -0.037347232525593362 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match6a
+    input: SC
+    left:
+      reference: ctr6a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr7a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11788.883519037736 TDB
+    name: ctr7a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 1007241.8469091873 km
+          pos_y: 282673.32841556903 km
+          pos_z: -429789.31641562039 km
+          vel_x: -0.03600404832413856 km/s
+          vel_y: 0.3989633840941228 km/s
+          vel_z: 0.088337023735514913 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match7a
+    input: SC
+    left:
+      reference: ctr7a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr8a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11799.074709575574 TDB
+    name: ctr8a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 975529.7312004288 km
+          pos_y: 599820.572852229 km
+          pos_z: -305270.21027052205 km
+          vel_x: -0.035468866365791316 km/s
+          vel_y: 0.31167661542815106 km/s
+          vel_z: 0.18700090067462857 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match8a
+    input: SC
+    left:
+      reference: ctr8a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr9a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11809.265900112858 TDB
+    name: ctr9a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 944395.36456256662 km
+          pos_y: 820695.33953102445 km
+          pos_z: -115371.53143067815 km
+          vel_x: -0.036724114748491354 km/s
+          vel_y: 0.18696091598785708 km/s
+          vel_z: 0.23587201961314638 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match9a
+    input: SC
+    left:
+      reference: ctr9a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr10a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11819.457090649628 TDB
+    name: ctr10a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 905501.92231363466 km
+          pos_y: 927462.24043151282 km
+          pos_z: 96471.106890507304 km
+          vel_x: -0.056237554654332028 km/s
+          vel_y: 0.056183768912098642 km/s
+          vel_z: 0.23822915448687479 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match10a
+    input: SC
+    left:
+      reference: ctr10a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr11a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11829.648281185944 TDB
+    name: ctr11a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 834663.61176990531 km
+          pos_y: 922278.12797808368 km
+          pos_z: 292244.35253202566 km
+          vel_x: -0.11217570860358594 km/s
+          vel_y: -0.065946784864195723 km/s
+          vel_z: 0.19972628405367843 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match11a
+    input: SC
+    left:
+      reference: ctr11a
+      dt: 440259.43126500724 s
+    right:
+      reference: ctr_dsm1a
+      dt: 440259.43126500724 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11839.839471721874 TDB
+    name: ctr_dsm1a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 612530.70635528036 km
+          pos_y: 849889.44436172291 km
+          pos_z: 456082.94196345349 km
+          vel_x: -0.22415081855770555 km/s
+          vel_y: -0.1771822982277515 km/s
+          vel_z: 0.11591923061040899 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: manoeuvre
+    name: man_dsm1
+    model: impulsive
+    input: SC
+    thruster: main
+    config:
+      point:
+        reference: ctr_dsm1a
+        dt: 0 s
+      direction:
+        axes: SEROT
+        dv_x: 0.066944859413304802 km/s
+        dv_y: -0.0089813622516552727 km/s
+        dv_z: -0.1246006190191038 km/s
+  - type: match
+    name: match_ctr_dsm1a
+    input: SC
+    left:
+      reference: ctr_dsm1a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr12a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11841.326301678746 TDB
+    name: ctr12a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 590911.27342416951 km
+          pos_y: 824595.21215246501 km
+          pos_z: 453796.58581800648 km
+          vel_x: -0.17978323140929703 km/s
+          vel_y: -0.20771622590754937 km/s
+          vel_z: -0.027123329682082909 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match12a
+    input: SC
+    left:
+      reference: ctr12a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr13a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11842.813131635599 TDB
+    name: ctr13a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 566230.58443585434 km
+          pos_y: 796495.72180048411 km
+          pos_z: 449055.06235977332 km
+          vel_x: -0.20491936097240715 km/s
+          vel_y: -0.22988871984011139 km/s
+          vel_z: -0.04695119772011308 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match13a
+    input: SC
+    left:
+      reference: ctr13a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr14a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11844.299961592458 TDB
+    name: ctr14a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 538137.70539616409 km
+          pos_y: 765489.42471707822 km
+          pos_z: 441660.84239064984 km
+          vel_x: -0.2329738018013626 km/s
+          vel_y: -0.2530426957060023 km/s
+          vel_z: -0.068483892883936054 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match14a
+    input: SC
+    left:
+      reference: ctr14a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr15a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11845.786791549312 TDB
+    name: ctr15a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 506229.67182423465 km
+          pos_y: 731419.23960594554 km
+          pos_z: 431368.60845661542 km
+          vel_x: -0.26440264418626769 km/s
+          vel_y: -0.27769191720930975 km/s
+          vel_z: -0.092153916662624194 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match15a
+    input: SC
+    left:
+      reference: ctr15a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr16a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11847.273621506147 TDB
+    name: ctr16a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 470036.63405000523 km
+          pos_y: 694047.96821651759 km
+          pos_z: 417867.23308207217 km
+          vel_x: -0.29979934307313916 km/s
+          vel_y: -0.30458816194192112 km/s
+          vel_z: -0.11856594694782699 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match16a
+    input: SC
+    left:
+      reference: ctr16a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr17a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11848.760451462989 TDB
+    name: ctr17a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 429000.49995551642 km
+          pos_y: 653019.11462452821 km
+          pos_z: 400751.7248249838 km
+          vel_x: -0.33995717102627798 km/s
+          vel_y: -0.33486972072161575 km/s
+          vel_z: -0.14859901718439034 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match17a
+    input: SC
+    left:
+      reference: ctr17a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr18a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11850.247281419828 TDB
+    name: ctr18a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 382443.35589125688 km
+          pos_y: 607791.3834342534 km
+          pos_z: 379477.19780435815 km
+          vel_x: -0.38596929949447062 km/s
+          vel_y: -0.37033790836708119 km/s
+          vel_z: -0.1835942507601 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match18a
+    input: SC
+    left:
+      reference: ctr18a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr19a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11851.73411137666 TDB
+    name: ctr19a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 329519.31718842528 km
+          pos_y: 557522.02118014591 km
+          pos_z: 353278.39504267101 km
+          vel_x: -0.43939239797083496 km/s
+          vel_y: -0.41401636407747838 km/s
+          vel_z: -0.22572870104954679 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match19a
+    input: SC
+    left:
+      reference: ctr19a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr20a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11853.220941333477 TDB
+    name: ctr20a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 269138.94086744875 km
+          pos_y: 500840.80124777957 km
+          pos_z: 321016.94724851096 km
+          vel_x: -0.50251859677370136 km/s
+          vel_y: -0.47140396119098738 km/s
+          vel_z: -0.27883598238408902 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match20a
+    input: SC
+    left:
+      reference: ctr20a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr21a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11854.707771290301 TDB
+    name: ctr21a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 199849.79374845489 km
+          pos_y: 435358.31176358613 km
+          pos_z: 280856.64103620616 km
+          vel_x: -0.57878104969617972 km/s
+          vel_y: -0.55373164996153634 km/s
+          vel_z: -0.35049561834861553 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match21a
+    input: SC
+    left:
+      reference: ctr21a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr22a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11856.194601247122 TDB
+    name: ctr22a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 119673.59248980143 km
+          pos_y: 356396.19779389224 km
+          pos_z: 229446.56297565557 km
+          vel_x: -0.67279259403404901 km/s
+          vel_y: -0.68848128793280872 km/s
+          vel_z: -0.45861792857914252 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match22a
+    input: SC
+    left:
+      reference: ctr22a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr23a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11857.681431203928 TDB
+    name: ctr23a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 26272.835009622373 km
+          pos_y: 252618.0468568182 km
+          pos_z: 159203.17166242507 km
+          vel_x: -0.78108978400103402 km/s
+          vel_y: -0.96881101923776936 km/s
+          vel_z: -0.66131861240370382 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match23a
+    input: SC
+    left:
+      reference: ctr23a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr24a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11859.168261160741 TDB
+    name: ctr24a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: -70514.519028608294 km
+          pos_y: 77912.829366557184 km
+          pos_z: 42044.855439032195 km
+          vel_x: -0.44897017050272192 km/s
+          vel_y: -2.0879645047405671 km/s
+          vel_z: -1.3454429219632567 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match24a
+    input: SC
+    left:
+      reference: ctr24a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr25a
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11860.655091117553 TDB
+    name: ctr25a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 153594.29295104474 km
+          pos_y: -91631.528296450066 km
+          pos_z: -40561.100880259648 km
+          vel_x: 1.9029612124892827 km/s
+          vel_y: 0.02518420999701379 km/s
+          vel_z: 0.23481036123996143 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match25a
+    input: SC
+    left:
+      reference: ctr25a
+      dt: 64231.054154345315 s
+    right:
+      reference: ctr_flybya
+      dt: 64231.054154345315 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11862.14192107435 TDB
+    name: ctr_flybya
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 365025.56414264278 km
+          pos_y: -31931.837307517631 km
+          pos_z: 25255.320793680708 km
+          vel_x: 2.4146782348443097 km/s
+          vel_y: 0.96426083693719655 km/s
+          vel_z: 0.41029181348423227 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match_ctr_flybya
+    input: SC
+    left:
+      reference: ctr_flybya
+      dt: 21599.999999999978 s
+    right:
+      reference: ctr26a
+      dt: 21599.999999999978 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11862.64192107419 TDB
+    name: ctr26a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 467400.10275998514 km
+          pos_y: 8984.0564235441489 km
+          pos_z: 42799.784310885203 km
+          vel_x: 2.3329618984413512 km/s
+          vel_y: 0.92818828683847898 km/s
+          vel_z: 0.40222934609380218 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match26a
+    input: SC
+    left:
+      reference: ctr26a
+      dt: 21599.999999999978 s
+    right:
+      reference: ctr27a
+      dt: 21599.999999999978 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11863.14192107403 TDB
+    name: ctr27a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 567097.65513773996 km
+          pos_y: 48187.944081520356 km
+          pos_z: 60032.623662756334 km
+          vel_x: 2.286881491669623 km/s
+          vel_y: 0.88646111941955985 km/s
+          vel_z: 0.39585120382704481 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match27a
+    input: SC
+    left:
+      reference: ctr27a
+      dt: 21599.999999999978 s
+    right:
+      reference: ctr28a
+      dt: 21599.999999999978 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11863.641921073871 TDB
+    name: ctr28a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 665262.7030946645 km
+          pos_y: 85564.338076034081 km
+          pos_z: 77021.17183177956 km
+          vel_x: 2.2602229407316399 km/s
+          vel_y: 0.8439455057644063 km/s
+          vel_z: 0.3908516884401384 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match28a
+    input: SC
+    left:
+      reference: ctr28a
+      dt: 21599.999999999978 s
+    right:
+      reference: ctr_dsm2a
+      dt: 21599.999999999978 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11864.141921073711 TDB
+    name: ctr_dsm2a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 546095.15222186723 km
+          pos_y: 248679.39833047392 km
+          pos_z: 36723.545496707498 km
+          vel_x: 2.2451407266393848 km/s
+          vel_y: 0.80184402387306897 km/s
+          vel_z: 0.38685712836435826 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: manoeuvre
+    name: man_dsm2
+    model: impulsive
+    input: SC
+    thruster: main
+    config:
+      point:
+        reference: ctr_dsm2a
+        dt: 0 s
+      direction:
+        axes: SEROT
+        dv_x: -1.1683242012492658 km/s
+        dv_y: 0.99678109089877476 km/s
+        dv_z: -0.37448258388451916 km/s
+  - type: match
+    name: match_ctr_dsm2a
+    input: SC
+    left:
+      reference: ctr_dsm2a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr29a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11893.860355274281 TDB
+    name: ctr29a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 4956528.391255917 km
+          pos_y: 2605500.3970000562 km
+          pos_z: 37812.357915897694 km
+          vel_x: 2.4292200850075467 km/s
+          vel_y: -0.083546754932647738 km/s
+          vel_z: -0.0027437426061667739 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match29a
+    input: SC
+    left:
+      reference: ctr29a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr30a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11923.578789476389 TDB
+    name: ctr30a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 12518844.212775616 km
+          pos_y: -1174447.9339912795 km
+          pos_z: 27609.848634054939 km
+          vel_x: 3.3097498999481356 km/s
+          vel_y: -3.0193892768433299 km/s
+          vel_z: -0.0052338499209132429 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match30a
+    input: SC
+    left:
+      reference: ctr30a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr31a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11953.297223682044 TDB
+    name: ctr31a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 20948081.611973729 km
+          pos_y: -13427518.573738351 km
+          pos_z: 12261.554013440598 km
+          vel_x: 3.0225466813640693 km/s
+          vel_y: -6.5584585980229457 km/s
+          vel_z: -0.0069150891167607097 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match31a
+    input: SC
+    left:
+      reference: ctr31a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr32a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 11983.015657892451 TDB
+    name: ctr32a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 26718451.093704835 km
+          pos_y: -34662233.544702254 km
+          pos_z: -5127.4535435711668 km
+          vel_x: 1.2124242387681967 km/s
+          vel_y: -9.8614605217053501 km/s
+          vel_z: -0.0092221881469824463 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match32a
+    input: SC
+    left:
+      reference: ctr32a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr33a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 12012.734092107614 TDB
+    name: ctr33a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 25935879.639449388 km
+          pos_y: -63080275.28032694 km
+          pos_z: -22359.99288233327 km
+          vel_x: -2.0097728329180562 km/s
+          vel_y: -12.005321752004036 km/s
+          vel_z: -0.011876163895581293 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match33a
+    input: SC
+    left:
+      reference: ctr33a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr34a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 12042.452526326293 TDB
+    name: ctr34a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: 15771391.007045943 km
+          pos_y: -94697843.751782 km
+          pos_z: -37637.636533278768 km
+          vel_x: -5.9254357294520741 km/s
+          vel_y: -12.271944155093962 km/s
+          vel_z: -0.012943186919054845 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match34a
+    input: SC
+    left:
+      reference: ctr34a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr35a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 12072.170960546235 TDB
+    name: ctr35a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: -4136639.9455138585 km
+          pos_y: -124347004.74612379 km
+          pos_z: -48966.52741422534 km
+          vel_x: -9.3939384661606304 km/s
+          vel_y: -10.509364740795602 km/s
+          vel_z: -0.010404113745629565 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match35a
+    input: SC
+    left:
+      reference: ctr35a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr36a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 12101.889394764785 TDB
+    name: ctr36a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: -31190759.250757299 km
+          pos_y: -147394539.90108812 km
+          pos_z: -54158.96353423343 km
+          vel_x: -11.345988401440589 km/s
+          vel_y: -7.2771725315356317 km/s
+          vel_z: -0.0035708385158529695 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match36a
+    input: SC
+    left:
+      reference: ctr36a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr37a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 12131.607828979731 TDB
+    name: ctr37a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: -60686567.742322877 km
+          pos_y: -161320495.51861098 km
+          pos_z: -51277.462342414176 km
+          vel_x: -11.268824178125517 km/s
+          vel_y: -3.5889606940761389 km/s
+          vel_z: 0.0064765272692956398 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match37a
+    input: SC
+    left:
+      reference: ctr37a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr38a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 12161.326263189892 TDB
+    name: ctr38a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: -87513707.579971299 km
+          pos_y: -166273345.31846014 km
+          pos_z: -39941.559879931192 km
+          vel_x: -9.3476781728999256 km/s
+          vel_y: -0.4294350405620655 km/s
+          vel_z: 0.016562788140968249 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match38a
+    input: SC
+    left:
+      reference: ctr38a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr39a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 12191.044697395333 TDB
+    name: ctr39a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: -107730768.92776743 km
+          pos_y: -164479645.23279789 km
+          pos_z: -21619.442112873134 km
+          vel_x: -6.2565069954175314 km/s
+          vel_y: 1.6043221121991813 km/s
+          vel_z: 0.023245259273818528 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match39a
+    input: SC
+    left:
+      reference: ctr39a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr40a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 12220.763131597314 TDB
+    name: ctr40a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: -119424612.65106142 km
+          pos_y: -159097265.79812527 km
+          pos_z: 723.61010710660412 km
+          vel_x: -2.8560835633353356 km/s
+          vel_y: 2.3742727959475936 km/s
+          vel_z: 0.023192191404599636 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match40a
+    input: SC
+    left:
+      reference: ctr40a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr41a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 12250.481565797867 TDB
+    name: ctr41a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: -122899607.51311925 km
+          pos_y: -153190898.99377227 km
+          pos_z: 22406.915029769407 km
+          vel_x: 0.011164837031497399 km/s
+          vel_y: 2.0565707381910272 km/s
+          vel_z: 0.015335835845824139 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: match
+    name: match41a
+    input: SC
+    left:
+      reference: ctr41a
+      dt: 1283836.3578751641 s
+    right:
+      reference: ctr42a
+      dt: 1283836.3578751641 s
+    body: Earth
+    vars: cart
+  - type: control
+    epoch: 12280.199999999295 TDB
+    name: ctr42a
+    state:
+      - name: SC_center
+        point: Earth
+        coi: Earth
+        axes: SEROT
+        project: false
+        dynamics: EMS_gravity
+        value:
+          pos_x: -120473783.40773545 km
+          pos_y: -149198560.00531754 km
+          pos_z: 38154.761776822459 km
+          vel_x: 1.6375002506544938 km/s
+          vel_y: 0.93138545389548 km/s
+          vel_z: 0.0024052097074261278 km/s
+      - name: SC_dv
+        value: 0 m/s
+  - type: point
+    input: SC
+    name: end_pointa
+    point:
+      reference: ctr42a
+      dt: 0 s
