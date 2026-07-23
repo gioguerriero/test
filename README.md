@@ -474,6 +474,8 @@ Every `.m` file begins with a header documenting its purpose, inputs, and output
 
 > On the first run the manifold database and KD-tree are built and cached; subsequent runs reuse them. The search is computationally heavy — start with a coarse sweep.
 
+> **New here?** A dedicated **step-by-step tutorial** — [`TUTORIAL.md`](TUTORIAL.md) — walks a first-time user through a complete lightweight run (from installing the dependencies to producing a refined trajectory), section by section and with annotated screenshots of the expected plots. It is the recommended starting point before diving into `main.m`.
+
 ---
 
 ## 15. Outputs
