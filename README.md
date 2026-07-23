@@ -464,15 +464,24 @@ Every `.m` file begins with a header documenting its purpose, inputs, and output
 | **MICE (SPICE for MATLAB)** | NAIF SPICE toolkit; ephemerides and time conversions. Download: <https://naif.jpl.nasa.gov/naif/toolkit_MATLAB.html> |
 | **SPICE kernels** | Provided in `kernels/` and loaded via the meta-kernel `sckernel.tm`. |
 
+### Downloading the heavy files
+
+The SPICE kernels (`kernels/`) and the cached manifold/KD-tree databases (`halo_manifold.mat`, `halo_tree.mat`) are **too large to host on GitHub** and are **not included in this repository**. Download them from:
+
+**<https://drive.google.com/drive/folders/1UOs_jA5jqdTVACn53cZaNN0Eka7E5gfF?usp=share_link>**
+
+Place `kernels/` and the two `.mat` files in the **project root** (same level as `main.m`) before running the code.
+
 ### Setup
 
-1. **Install MICE.** Download the MATLAB MICE toolkit from the official NAIF page — <https://naif.jpl.nasa.gov/naif/toolkit_MATLAB.html> — and unpack it locally.
-2. **Configure the MICE path.** Edit [`startup.m`](startup.m) so its `addpath` lines point at the **absolute path of your own local MICE installation** (`.../mice/lib` and `.../mice/src/mice`). The placeholder paths in `startup.m` **must** be replaced with your machine's actual install location, or every `cspice_*` call will fail.
-3. Ensure the `kernels/` folder is present; `main.m` loads it with `cspice_furnsh({'kernels/sckernel.tm'})`.
-4. Open `main.m`, select the target comet (`selected_comet`) and adjust the sweep / refinement parameters in the *User-configurable parameters* block.
-5. Run `main.m`.
+1. **Download the heavy files.** See [Downloading the heavy files](#downloading-the-heavy-files) above.
+2. **Install MICE.** Download the MATLAB MICE toolkit from the official NAIF page — <https://naif.jpl.nasa.gov/naif/toolkit_MATLAB.html> — and unpack it locally.
+3. **Configure the MICE path.** Edit [`startup.m`](startup.m) so its `addpath` lines point at the **absolute path of your own local MICE installation** (`.../mice/lib` and `.../mice/src/mice`). The placeholder paths in `startup.m` **must** be replaced with your machine's actual install location, or every `cspice_*` call will fail.
+4. Ensure the `kernels/` folder is present; `main.m` loads it with `cspice_furnsh({'kernels/sckernel.tm'})`.
+5. Open `main.m`, select the target comet (`selected_comet`) and adjust the sweep / refinement parameters in the *User-configurable parameters* block.
+6. Run `main.m`.
 
-> On the first run the manifold database and KD-tree are built and cached; subsequent runs reuse them. The search is computationally heavy — start with a coarse sweep.
+> If `halo_manifold.mat` / `halo_tree.mat` were downloaded as above, they are reused directly; otherwise the manifold database and KD-tree are built from scratch on the first run and cached for subsequent runs. The search is computationally heavy — start with a coarse sweep.
 
 > **New here?** A dedicated **step-by-step tutorial** — [`TUTORIAL.md`](TUTORIAL.md) — walks a first-time user through a complete lightweight run (from installing the dependencies to producing a refined trajectory), section by section and with annotated screenshots of the expected plots. It is the recommended starting point before diving into `main.m`.
 

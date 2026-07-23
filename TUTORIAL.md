@@ -6,13 +6,19 @@ The screenshots below come from a real run with the default settings shown here;
 
 ---
 
-## 0. Before you start — dependencies and MICE
+## 0. Before you start — heavy files, dependencies and MICE
 
-1. **Install the required packages.** Install everything listed in the **[§14 "Getting Started" → Requirements](README.md#14-getting-started)** section of the main README (MATLAB toolboxes and the MICE/SPICE toolkit).
+1. **Download the heavy files.** The SPICE kernels (`kernels/`) and the cached manifold/KD-tree databases (`halo_manifold.mat`, `halo_tree.mat`) are too large for GitHub and are **not included in this repository**. Download them from:
 
-2. **Point the code to your MICE install.** Open [`startup.m`](startup.m) and edit the `addpath` lines so they point to the **absolute path where you saved MICE** on your machine. The code loads SPICE from that address at startup, so if the path is wrong every `cspice_*` call will fail.
+   **<https://drive.google.com/drive/folders/1UOs_jA5jqdTVACn53cZaNN0Eka7E5gfF?usp=share_link>**
 
-Once the packages are installed and `startup.m` points at your MICE, you can go straight to the code.
+   Place `kernels/` and the two `.mat` files in the **project root**, next to `main.m`.
+
+2. **Install the required packages.** Install everything listed in the **[§14 "Getting Started" → Requirements](README.md#14-getting-started)** section of the main README (MATLAB toolboxes and the MICE/SPICE toolkit).
+
+3. **Point the code to your MICE install.** Open [`startup.m`](startup.m) and edit the `addpath` lines so they point to the **absolute path where you saved MICE** on your machine. The code loads SPICE from that address at startup, so if the path is wrong every `cspice_*` call will fail.
+
+Once the heavy files are in place, the packages are installed, and `startup.m` points at your MICE, you can go straight to the code.
 
 ---
 
